@@ -19,7 +19,11 @@ use errors::Error;
 use id::Id;
 use math::{BoundingBox, Dimensions, Vector2};
 use render_commands::RenderCommand;
-use text::{TextConfig, TextElementConfig};
+
+#[cfg(feature = "std")]
+use text::TextConfig;
+
+use text::TextElementConfig;
 
 #[derive(Copy, Clone)]
 pub struct Declaration {
@@ -188,7 +192,7 @@ impl<'a> Clay<'a> {
             dimensions.into(),
             Clay_ErrorHandler {
                 errorHandlerFunction: Some(error_handler),
-                userData: 0,
+                userData: core::ptr::null_mut(),
             },
         );
 
