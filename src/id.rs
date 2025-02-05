@@ -6,7 +6,6 @@ pub struct Id {
 
 impl Id {
     /// Creates a clay id using the `label`
-    #[allow(clippy::new_ret_no_self)]
     #[inline]
     pub(crate) fn new(label: &str) -> Id {
         Self::new_index(label, 0)
