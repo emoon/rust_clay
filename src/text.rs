@@ -137,7 +137,9 @@ impl From<Clay_TextElementConfig> for TextConfig {
             font_size: value.fontSize,
             letter_spacing: value.letterSpacing,
             line_height: value.lineHeight,
-            wrap_mode: unsafe { core::mem::transmute::<u8, TextElementConfigWrapMode>(value.wrapMode) },
+            wrap_mode: unsafe {
+                core::mem::transmute::<u8, TextElementConfigWrapMode>(value.wrapMode)
+            },
             hash_string_contents: value.hashStringContents,
         }
     }

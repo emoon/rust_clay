@@ -1,8 +1,4 @@
-use clay_layout::{
-    fixed,
-    Clay,
-    Declaration,
-};
+use clay_layout::{fixed, Clay, Declaration};
 
 #[rustfmt::skip]
 fn main() {

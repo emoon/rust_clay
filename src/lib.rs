@@ -445,9 +445,9 @@ impl From<Clay_StringSlice> for &str {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use color::Color;
     use layout::{Padding, Sizing};
-    use super::*;
 
     #[test]
     #[rustfmt::skip]
