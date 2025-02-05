@@ -14,11 +14,12 @@ pub mod text;
 mod mem;
 
 use crate::bindings::*;
-use color::Color;
 use errors::Error;
 use id::Id;
 use math::{BoundingBox, Dimensions, Vector2};
 use render_commands::RenderCommand;
+
+pub use color::Color;
 
 #[cfg(feature = "std")]
 use text::TextConfig;
