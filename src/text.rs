@@ -81,7 +81,7 @@ impl TextConfig {
     /// Enables or disables hashing of string contents.
     ///
     /// If the text content changes frequently, set this to `true` otherwise Clay will cache this
-    /// and not rehash the content. 
+    /// and not rehash the content.
     pub fn hash_string_contents(&mut self, do_hash: bool) -> &mut Self {
         self.hash_string_contents = do_hash;
         self
@@ -137,7 +137,7 @@ impl From<Clay_TextElementConfig> for TextConfig {
             font_size: value.fontSize,
             letter_spacing: value.letterSpacing,
             line_height: value.lineHeight,
-            wrap_mode: unsafe { core::mem::transmute(value.wrapMode) }, 
+            wrap_mode: unsafe { core::mem::transmute(value.wrapMode) },
             hash_string_contents: value.hashStringContents,
         }
     }

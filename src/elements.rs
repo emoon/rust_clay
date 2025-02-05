@@ -1,4 +1,4 @@
-use crate::{Declaration, bindings::*, color::Color, DataRef, Vector2, Dimensions};
+use crate::{bindings::*, color::Color, DataRef, Declaration, Dimensions, Vector2};
 use core::ffi::c_void;
 
 /// Builder for configuring border properties of a `Declaration`.
@@ -79,7 +79,7 @@ impl ImageBuilder<'_> {
     }
 
     /// Sets the image data using a raw pointer.
-    /// 
+    ///
     /// # Safety
     /// This function is unsafe because it accepts a raw pointer.
     pub unsafe fn data_ptr(&mut self, data: *const c_void) -> &mut Self {

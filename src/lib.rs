@@ -8,19 +8,18 @@ pub mod errors;
 pub mod id;
 pub mod layout;
 pub mod math;
-pub mod text;
 pub mod render_commands;
+pub mod text;
 
 mod mem;
 
-use text::{TextConfig, TextElementConfig};
-use id::Id;
-use errors::Error;
-use math::{BoundingBox, Dimensions, Vector2};
-use color::Color;
-use render_commands::RenderCommand;
 use crate::bindings::*;
-
+use color::Color;
+use errors::Error;
+use id::Id;
+use math::{BoundingBox, Dimensions, Vector2};
+use render_commands::RenderCommand;
+use text::{TextConfig, TextElementConfig};
 
 #[derive(Copy, Clone)]
 pub struct Declaration {
@@ -37,39 +36,38 @@ impl Declaration {
         self
     }
 
-    pub fn scroll(&mut self, horizontal: bool, vertical: bool) -> &mut Self { 
+    pub fn scroll(&mut self, horizontal: bool, vertical: bool) -> &mut Self {
         self.inner.scroll.horizontal = horizontal;
         self.inner.scroll.vertical = vertical;
         self
     }
-    
+
     pub fn id(&mut self, id: Id) -> &mut Self {
         self.inner.id = id.id;
         self
     }
 
-    pub fn layout(&mut self) -> layout::LayoutBuilder { 
+    pub fn layout(&mut self) -> layout::LayoutBuilder {
         layout::LayoutBuilder::new(self)
-    } 
+    }
 
-    pub fn image(&mut self) -> elements::ImageBuilder { 
+    pub fn image(&mut self) -> elements::ImageBuilder {
         elements::ImageBuilder::new(self)
     }
 
-    pub fn floating(&mut self) -> elements::FloatingBuilder { 
+    pub fn floating(&mut self) -> elements::FloatingBuilder {
         elements::FloatingBuilder::new(self)
     }
 
-    pub fn border(&mut self) -> elements::BorderBuilder { 
+    pub fn border(&mut self) -> elements::BorderBuilder {
         elements::BorderBuilder::new(self)
     }
     /*
-    pub fn corner_radius(&mut self) -> CornerRadiusBuilder { 
+    pub fn corner_radius(&mut self) -> CornerRadiusBuilder {
         CornerRadiusBuilder::new(self)
     }
     */
 }
-
 
 #[cfg(feature = "std")]
 unsafe extern "C" fn measure_text_trampoline_user_data<'a, F, T>(

@@ -1,4 +1,4 @@
-use crate::{Declaration, bindings::*};
+use crate::{bindings::*, Declaration};
 
 /// Defines different sizing behaviors for an element.
 #[derive(Debug, Clone, Copy)]
@@ -46,7 +46,10 @@ impl From<Sizing> for Clay_SizingAxis {
             Sizing::Fixed(size) => Self {
                 type_: SizingType::Fixed as _,
                 size: Clay_SizingAxis__bindgen_ty_1 {
-                    minMax: Clay_SizingMinMax { min: size, max: size },
+                    minMax: Clay_SizingMinMax {
+                        min: size,
+                        max: size,
+                    },
                 },
             },
             Sizing::Percent(percent) => Self {
@@ -73,7 +76,12 @@ pub struct Padding {
 impl Padding {
     /// Creates a new `Padding` with individual values for each side.
     pub fn new(left: u16, right: u16, top: u16, bottom: u16) -> Self {
-        Self { left, right, top, bottom }
+        Self {
+            left,
+            right,
+            top,
+            bottom,
+        }
     }
 
     /// Sets the same padding value for all sides.
@@ -243,7 +251,6 @@ macro_rules! percent {
     };
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -285,4 +292,3 @@ mod test {
         assert!(matches!(value, Sizing::Percent(0.5)));
     }
 }
-

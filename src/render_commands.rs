@@ -1,7 +1,7 @@
 use crate::{
     bindings::*,
-    math::{BoundingBox, Dimensions},
     color::Color,
+    math::{BoundingBox, Dimensions},
 };
 
 /// Represents a rectangle with a specified color and corner radii.
@@ -100,10 +100,12 @@ impl From<Clay_RectangleRenderData> for Rectangle {
 
 impl From<Clay_TextRenderData> for Text<'_> {
     fn from(value: Clay_TextRenderData) -> Self {
-        let text = unsafe { core::str::from_utf8_unchecked(core::slice::from_raw_parts(
-            value.stringContents.chars as *const u8,
-            value.stringContents.length as _,
-        )) };
+        let text = unsafe {
+            core::str::from_utf8_unchecked(core::slice::from_raw_parts(
+                value.stringContents.chars as *const u8,
+                value.stringContents.length as _,
+            ))
+        };
 
         Self {
             text,
@@ -140,7 +142,7 @@ impl From<Clay_BorderRenderData> for Border {
     fn from(value: Clay_BorderRenderData) -> Self {
         Self {
             color: value.color.into(),
-            corner_radii: value.cornerRadius.into(), 
+            corner_radii: value.cornerRadius.into(),
 
             width: BorderWidth {
                 left: value.width.left,
@@ -148,7 +150,7 @@ impl From<Clay_BorderRenderData> for Border {
                 top: value.width.top,
                 bottom: value.width.bottom,
                 between_children: value.width.betweenChildren,
-            }, 
+            },
         }
     }
 }
@@ -180,18 +182,23 @@ impl From<&Clay_RenderCommand> for RenderCommandConfig<'_> {
     fn from(value: &Clay_RenderCommand) -> Self {
         match value.commandType {
             Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_NONE => Self::None(),
-            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_RECTANGLE => 
-                Self::Rectangle(Rectangle::from(*unsafe { &value.renderData.rectangle })),
-            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_TEXT => Self::Text(
-                Text::from(*unsafe { &value.renderData.text })),
-            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_BORDER => 
-                Self::Border(Border::from(*unsafe { &value.renderData.border })),
-            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_IMAGE => 
-                Self::Image(Image::from(*unsafe { &value.renderData.image })),
+            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_RECTANGLE => {
+                Self::Rectangle(Rectangle::from(*unsafe { &value.renderData.rectangle }))
+            }
+            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_TEXT => {
+                Self::Text(Text::from(*unsafe { &value.renderData.text }))
+            }
+            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_BORDER => {
+                Self::Border(Border::from(*unsafe { &value.renderData.border }))
+            }
+            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_IMAGE => {
+                Self::Image(Image::from(*unsafe { &value.renderData.image }))
+            }
             Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_SCISSOR_START => Self::ScissorStart(),
             Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_SCISSOR_END => Self::ScissorEnd(),
-            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_CUSTOM => 
-                Self::Custom(Custom::from(*unsafe { &value.renderData.custom })), 
+            Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_CUSTOM => {
+                Self::Custom(Custom::from(*unsafe { &value.renderData.custom }))
+            }
             _ => unreachable!(),
         }
     }
