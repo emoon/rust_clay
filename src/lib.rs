@@ -62,11 +62,16 @@ impl Declaration {
     pub fn border(&mut self) -> elements::BorderBuilder {
         elements::BorderBuilder::new(self)
     }
-    /*
-    pub fn corner_radius(&mut self) -> CornerRadiusBuilder {
-        CornerRadiusBuilder::new(self)
+
+    pub fn corner_radius(&mut self) -> elements::CornerRadiusBuilder {
+        elements::CornerRadiusBuilder::new(self)
     }
-    */
+}
+
+impl Default for Declaration {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 #[cfg(feature = "std")]
@@ -437,19 +442,8 @@ impl From<Clay_StringSlice> for &str {
 #[cfg(test)]
 mod tests {
     use color::Color;
-    use elements::{
-        containers::border::BorderContainer, rectangle::Rectangle, text::Text, CornerRadius,
-    };
-    use layout::{padding::Padding, sizing::Sizing, Layout};
-
+    use layout::{Padding, Sizing};
     use super::*;
-
-    /*
-    #[test]
-    fn test_create() {
-        let _clay = Clay::new(800.0, 600.0);
-    }
-    */
 
     #[test]
     #[rustfmt::skip]
@@ -469,31 +463,33 @@ mod tests {
 
         clay.begin();
 
-        clay.with(Some("parent_rect"), [
-            Layout::new()
+        clay.with(&Declaration::new()
+            .id(clay.id("parent_rect"))
+            .layout()
                 .width(Sizing::Fixed(100.0))
                 .height(Sizing::Fixed(100.0))
                 .padding(Padding::all(10))
-                .end(),
-            Rectangle::new().color(Color::rgb(255., 255., 255.)).end()], |clay| 
+                .end()
+            .background_color(Color::rgb(255., 255., 255.)), |clay|
         {
-            clay.with(None, [
-                Layout::new()
+            clay.with(&Declaration::new()
+                .layout()
                     .width(Sizing::Fixed(100.0))
                     .height(Sizing::Fixed(100.0))
                     .padding(Padding::all(10))
-                    .end(),
-                Rectangle::new().color(Color::rgb(255., 255., 255.)).end()], |clay| 
+                    .end()
+                .background_color(Color::rgb(255., 255., 255.)), |clay| 
             {
-                clay.with(Some("rect_under_rect"), [
-                    Layout::new()
+                clay.with(&Declaration::new()
+                    .id(clay.id("rect_under_rect"))
+                    .layout()
                         .width(Sizing::Fixed(100.0))
                         .height(Sizing::Fixed(100.0))
                         .padding(Padding::all(10))
-                        .end(),
-                    Rectangle::new().color(Color::rgb(255., 255., 255.)).end()], |clay| 
+                        .end()
+                    .background_color(Color::rgb(255., 255., 255.)), |clay| 
                     {
-                        clay.text("test", Text::new()
+                        clay.text("test", TextConfig::new()
                             .color(Color::rgb(255., 255., 255.))
                             .font_size(24)
                             .end());
@@ -502,19 +498,24 @@ mod tests {
             });
         });
 
-        clay.with_id_index(Some(("Border_container", 1)), [
-            Layout::new().padding(Padding::all(16)).end(),
-            BorderContainer::new()
-                .all_directions(2, Color::rgb(255., 255., 0.))
-                .corner_radius(CornerRadius::All(25.))
-                .end()], |clay| 
+        clay.with(&Declaration::new()
+            .id(clay.id_index("border_container", 1))
+            .layout()
+                .padding(Padding::all(16))
+                .end()
+            .border()
+                .color(Color::rgb(255., 255., 0.))
+                .all_directions(2)
+                .end()
+            .corner_radius().all(10.0).end(), |clay|
         {
-            clay.with(Some("rect_under_border"), [
-                Layout::new()
+            clay.with(&Declaration::new()
+                .id(clay.id("rect_under_border"))
+                .layout()
                     .width(Sizing::Fixed(50.0))
                     .height(Sizing::Fixed(50.0))
-                    .end(),
-                Rectangle::new().color(Color::rgb(0., 255., 255.)).end()], |_clay| {},
+                    .end()
+                .background_color(Color::rgb(0., 255., 255.)), |_clay| {},
             );
         });
 
@@ -526,26 +527,5 @@ mod tests {
                 item.id, item.bounding_box, item.config,
             );
         }
-    }
-
-    /*
-    #[test]
-    fn clay_floating_attach_point_type() {
-        assert_eq!(FloatingAttachPointType::LeftTop as c_uchar, 0 as c_uchar);
-    }
-
-    #[test]
-    fn clay_element_config_type() {
-        assert_eq!(ElementConfigType::BorderContainer as c_uchar, 2 as c_uchar);
-    }
-
-    */
-
-    #[test]
-    fn size_of_union() {
-        assert_eq!(
-            core::mem::size_of::<Clay_SizingAxis__bindgen_ty_1>(),
-            core::mem::size_of::<Clay_SizingAxis__bindgen_ty_1>()
-        )
     }
 }

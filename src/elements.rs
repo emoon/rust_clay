@@ -12,6 +12,15 @@ impl BorderBuilder<'_> {
         BorderBuilder { parent }
     }
 
+    /// Set the same border width for all sides.
+    pub fn all_directions(&mut self, width: u16) -> &mut Self {
+        self.parent.inner.border.width.left = width;
+        self.parent.inner.border.width.right = width;
+        self.parent.inner.border.width.top = width;
+        self.parent.inner.border.width.bottom = width;
+        self
+    }
+
     /// Sets the left border width.
     pub fn left(&mut self, width: u16) -> &mut Self {
         self.parent.inner.border.width.left = width;

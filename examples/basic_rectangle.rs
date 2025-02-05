@@ -1,8 +1,7 @@
 use clay_layout::{
-    elements::{rectangle::Rectangle, CornerRadius},
     fixed,
-    layout::Layout,
     Clay,
+    Declaration,
 };
 
 #[rustfmt::skip]
@@ -15,13 +14,15 @@ fn main() {
 
     // Adds a red rectangle with a corner radius of 5.
     // The Layout makes the rectangle have a width and height of 50.
-    clay.with(Some("red_rectangle"), [
-        Layout::new().width(fixed!(50.)).height(fixed!(50.)).end(),
-        Rectangle::new()
-            .color((0xFF, 0x00, 0x00).into())
-            .corner_radius(CornerRadius::All(5.))
-            .end() ],
-        |_| {},
+    clay.with(&Declaration::new()
+        .layout()
+            .width(fixed!(50.))
+            .height(fixed!(50.))
+            .end()
+        .corner_radius()
+            .all(5.)
+            .end()
+        .background_color((0xFF, 0x00, 0x00).into()), |_| {},
     );
 
     // Return the list of render commands of your layout
