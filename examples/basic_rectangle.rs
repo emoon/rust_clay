@@ -11,6 +11,7 @@ fn main() {
     // Adds a red rectangle with a corner radius of 5.
     // The Layout makes the rectangle have a width and height of 50.
     clay.with(&Declaration::new()
+        .id(clay.id("red_rectangle"))
         .layout()
             .width(fixed!(50.))
             .height(fixed!(50.))

@@ -157,23 +157,27 @@ pub struct LayoutBuilder<'a> {
 
 impl LayoutBuilder<'_> {
     /// Creates a new `LayoutBuilder` with the given parent `Declaration`.
+    #[inline]
     pub fn new(parent: &mut Declaration) -> LayoutBuilder {
         LayoutBuilder { parent }
     }
 
     /// Sets the width of the layout.
+    #[inline]
     pub fn width(&mut self, width: Sizing) -> &mut Self {
         self.parent.inner.layout.sizing.width = width.into();
         self
     }
 
     /// Sets the height of the layout.
+    #[inline]
     pub fn height(&mut self, height: Sizing) -> &mut Self {
         self.parent.inner.layout.sizing.height = height.into();
         self
     }
 
     /// Sets padding values for the layout.
+    #[inline]
     pub fn padding(&mut self, padding: Padding) -> &mut Self {
         self.parent.inner.layout.padding.left = padding.left;
         self.parent.inner.layout.padding.right = padding.right;
@@ -183,12 +187,14 @@ impl LayoutBuilder<'_> {
     }
 
     /// Sets the spacing between child elements.
+    #[inline]
     pub fn child_gap(&mut self, child_gap: u16) -> &mut Self {
         self.parent.inner.layout.childGap = child_gap;
         self
     }
 
     /// Sets the alignment of child elements.
+    #[inline]
     pub fn child_alignment(&mut self, child_alignment: Alignment) -> &mut Self {
         self.parent.inner.layout.childAlignment.x = child_alignment.x as _;
         self.parent.inner.layout.childAlignment.y = child_alignment.y as _;
@@ -196,12 +202,14 @@ impl LayoutBuilder<'_> {
     }
 
     /// Sets the layout direction.
+    #[inline]
     pub fn direction(&mut self, direction: LayoutDirection) -> &mut Self {
         self.parent.inner.layout.layoutDirection = direction as _;
         self
     }
 
     /// Returns the modified `Declaration`.
+    #[inline]
     pub fn end(&mut self) -> &mut Declaration {
         self.parent
     }

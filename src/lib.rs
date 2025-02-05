@@ -32,42 +32,51 @@ pub struct Declaration {
 }
 
 impl Declaration {
+    #[inline]
     pub fn new() -> Self {
         crate::mem::zeroed_init()
     }
 
+    #[inline]
     pub fn background_color(&mut self, color: Color) -> &mut Self {
         self.inner.backgroundColor = color.into();
         self
     }
 
+    #[inline]
     pub fn scroll(&mut self, horizontal: bool, vertical: bool) -> &mut Self {
         self.inner.scroll.horizontal = horizontal;
         self.inner.scroll.vertical = vertical;
         self
     }
 
+    #[inline]
     pub fn id(&mut self, id: Id) -> &mut Self {
         self.inner.id = id.id;
         self
     }
 
+    #[inline]
     pub fn layout(&mut self) -> layout::LayoutBuilder {
         layout::LayoutBuilder::new(self)
     }
 
+    #[inline]
     pub fn image(&mut self) -> elements::ImageBuilder {
         elements::ImageBuilder::new(self)
     }
 
+    #[inline]
     pub fn floating(&mut self) -> elements::FloatingBuilder {
         elements::FloatingBuilder::new(self)
     }
 
+    #[inline]
     pub fn border(&mut self) -> elements::BorderBuilder {
         elements::BorderBuilder::new(self)
     }
 
+    #[inline]
     pub fn corner_radius(&mut self) -> elements::CornerRadiusBuilder {
         elements::CornerRadiusBuilder::new(self)
     }
@@ -273,6 +282,7 @@ impl<'a> Clay<'a> {
     /// Generates a unique ID based on the given `label`.
     ///
     /// This ID is global and must be unique across the entire scope.
+    #[inline]
     pub fn id(&self, label: &'a str) -> id::Id {
         id::Id::new(label)
     }
@@ -280,6 +290,7 @@ impl<'a> Clay<'a> {
     /// Generates a unique indexed ID based on the given `label` and `index`.
     ///
     /// This is useful when multiple elements share the same label but need distinct IDs.
+    #[inline]
     pub fn id_index(&self, label: &'a str, index: u32) -> id::Id {
         id::Id::new_index(label, index)
     }
@@ -287,6 +298,7 @@ impl<'a> Clay<'a> {
     /// Generates a locally unique ID based on the given `label`.
     ///
     /// The ID is unique within a specific local scope but not globally.
+    #[inline]
     pub fn id_local(&self, label: &'a str) -> id::Id {
         id::Id::new_index_local(label, 0)
     }
@@ -294,6 +306,7 @@ impl<'a> Clay<'a> {
     /// Generates a locally unique indexed ID based on the given `label` and `index`.
     ///
     /// This is useful for differentiating elements within a local scope while keeping their labels consistent.
+    #[inline]
     pub fn id_index_local(&self, label: &'a str, index: u32) -> id::Id {
         id::Id::new_index_local(label, index)
     }
@@ -368,10 +381,12 @@ impl<'a> Clay<'a> {
         }
     }
 
+    #[inline]
     pub fn begin(&self) {
         unsafe { Clay_BeginLayout() };
     }
 
+    #[inline]
     pub fn end(&self) -> impl Iterator<Item = RenderCommand> {
         let array = unsafe { Clay_EndLayout() };
         let slice = unsafe { core::slice::from_raw_parts(array.internalArray, array.length as _) };

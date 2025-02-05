@@ -8,11 +8,13 @@ pub struct BorderBuilder<'a> {
 
 impl BorderBuilder<'_> {
     /// Creates a new `BorderBuilder` with the given parent `Declaration`.
+    #[inline]
     pub fn new(parent: &mut Declaration) -> BorderBuilder {
         BorderBuilder { parent }
     }
 
     /// Set the same border width for all sides.
+    #[inline]
     pub fn all_directions(&mut self, width: u16) -> &mut Self {
         self.parent.inner.border.width.left = width;
         self.parent.inner.border.width.right = width;
@@ -22,42 +24,49 @@ impl BorderBuilder<'_> {
     }
 
     /// Sets the left border width.
+    #[inline]
     pub fn left(&mut self, width: u16) -> &mut Self {
         self.parent.inner.border.width.left = width;
         self
     }
 
     /// Sets the right border width.
+    #[inline]
     pub fn right(&mut self, width: u16) -> &mut Self {
         self.parent.inner.border.width.right = width;
         self
     }
 
     /// Sets the top border width.
+    #[inline]
     pub fn top(&mut self, width: u16) -> &mut Self {
         self.parent.inner.border.width.top = width;
         self
     }
 
     /// Sets the bottom border width.
+    #[inline]
     pub fn bottom(&mut self, width: u16) -> &mut Self {
         self.parent.inner.border.width.bottom = width;
         self
     }
 
     /// Sets the spacing between child elements.
+    #[inline]
     pub fn between_children(&mut self, width: u16) -> &mut Self {
         self.parent.inner.border.width.betweenChildren = width;
         self
     }
 
     /// Sets the border color.
+    #[inline]
     pub fn color(&mut self, color: Color) -> &mut Self {
         self.parent.inner.border.color = color.into();
         self
     }
 
     /// Returns the modified `Declaration`.
+    #[inline]
     pub fn end(&mut self) -> &mut Declaration {
         self.parent
     }
@@ -70,11 +79,13 @@ pub struct ImageBuilder<'a> {
 
 impl ImageBuilder<'_> {
     /// Creates a new `ImageBuilder` with the given parent `Declaration`.
+    #[inline]
     pub fn new(parent: &mut Declaration) -> ImageBuilder {
         ImageBuilder { parent }
     }
 
     /// Sets the source directory of the image.
+    #[inline]
     pub fn source_dimensions(&mut self, dimensions: Dimensions) -> &mut Self {
         self.parent.inner.image.sourceDimensions = dimensions.into();
         self
@@ -82,6 +93,7 @@ impl ImageBuilder<'_> {
 
     /// Sets the image data.
     /// The data must be created using [`Clay::data`].
+    #[inline]
     pub fn data(&mut self, data: DataRef) -> &mut Self {
         self.parent.inner.image.imageData = data.ptr as *mut c_void;
         self
@@ -91,12 +103,14 @@ impl ImageBuilder<'_> {
     ///
     /// # Safety
     /// This function is unsafe because it accepts a raw pointer.
+    #[inline]
     pub unsafe fn data_ptr(&mut self, data: *const c_void) -> &mut Self {
         self.parent.inner.image.imageData = data as _;
         self
     }
 
     /// Returns the modified `Declaration`.
+    #[inline]
     pub fn end(&mut self) -> &mut Declaration {
         self.parent
     }
@@ -157,35 +171,41 @@ pub struct FloatingBuilder<'a> {
 
 impl FloatingBuilder<'_> {
     /// Creates a new `FloatingBuilder` with the given parent `Declaration`.
+    #[inline]
     pub fn new(parent: &mut Declaration) -> FloatingBuilder {
         FloatingBuilder { parent }
     }
 
     /// Sets the floating element's offset.
+    #[inline]
     pub fn offset(&mut self, offset: Vector2) -> &mut Self {
         self.parent.inner.floating.offset = offset.into();
         self
     }
 
     /// Sets the floating element's dimensions.
+    #[inline]
     pub fn dimensions(&mut self, dimensions: Dimensions) -> &mut Self {
         self.parent.inner.floating.expand = dimensions.into();
         self
     }
 
     /// Sets the floating element's Z-index.
+    #[inline]
     pub fn z_index(&mut self, z_index: i16) -> &mut Self {
         self.parent.inner.floating.zIndex = z_index;
         self
     }
 
     /// Sets the parent element ID.
+    #[inline]
     pub fn parent_id(&mut self, id: u32) -> &mut Self {
         self.parent.inner.floating.parentId = id;
         self
     }
 
     /// Sets the attachment points of the floating element and its parent.
+    #[inline]
     pub fn attach_points(
         &mut self,
         element: FloatingAttachPointType,
@@ -202,18 +222,21 @@ impl FloatingBuilder<'_> {
     /// - [`FloatingAttachToElement::Parent`] - The element is attached to its parent.
     /// - [`FloatingAttachToElement::ElementWithId`] - The element is attached to a specific element by ID.
     /// - [`FloatingAttachToElement::Root`] - The element is attached to the root of the layout.
+    #[inline]
     pub fn attach_to(&mut self, attach: FloatingAttachToElement) -> &mut Self {
         self.parent.inner.floating.attachTo = attach as _;
         self
     }
 
     /// Sets the pointer capture mode.
+    #[inline]
     pub fn pointer_capture_mode(&mut self, mode: PointerCaptureMode) -> &mut Self {
         self.parent.inner.floating.pointerCaptureMode = mode as _;
         self
     }
 
     /// Returns the modified `Declaration`.
+    #[inline]
     pub fn end(&mut self) -> &mut Declaration {
         self.parent
     }
@@ -226,35 +249,41 @@ pub struct CornerRadiusBuilder<'a> {
 
 impl CornerRadiusBuilder<'_> {
     /// Creates a new `CornerRadiusBuilder` with the given parent `Declaration`.
+    #[inline]
     pub fn new(parent: &mut Declaration) -> CornerRadiusBuilder {
         CornerRadiusBuilder { parent }
     }
 
     /// Sets the top-left corner radius.
+    #[inline]
     pub fn top_left(&mut self, radius: f32) -> &mut Self {
         self.parent.inner.cornerRadius.topLeft = radius;
         self
     }
 
     /// Sets the top-right corner radius.
+    #[inline]
     pub fn top_right(&mut self, radius: f32) -> &mut Self {
         self.parent.inner.cornerRadius.topRight = radius;
         self
     }
 
     /// Sets the bottom-left corner radius.
+    #[inline]
     pub fn bottom_left(&mut self, radius: f32) -> &mut Self {
         self.parent.inner.cornerRadius.bottomLeft = radius;
         self
     }
 
     /// Sets the bottom-right corner radius.
+    #[inline]
     pub fn bottom_right(&mut self, radius: f32) -> &mut Self {
         self.parent.inner.cornerRadius.bottomRight = radius;
         self
     }
 
     /// Sets all four corner radii to the same value.
+    #[inline]
     pub fn all(&mut self, radius: f32) -> &mut Self {
         self.parent.inner.cornerRadius.topLeft = radius;
         self.parent.inner.cornerRadius.topRight = radius;
@@ -264,6 +293,7 @@ impl CornerRadiusBuilder<'_> {
     }
 
     /// Returns the modified `Declaration`.
+    #[inline]
     pub fn end(&mut self) -> &mut Declaration {
         self.parent
     }
