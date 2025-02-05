@@ -176,6 +176,7 @@ pub enum RenderCommandConfig<'a> {
 }
 
 impl From<&Clay_RenderCommand> for RenderCommandConfig<'_> {
+    #[allow(non_upper_case_globals)]
     fn from(value: &Clay_RenderCommand) -> Self {
         match value.commandType {
             Clay_RenderCommandType_CLAY_RENDER_COMMAND_TYPE_NONE => Self::None(),

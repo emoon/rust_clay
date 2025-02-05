@@ -407,12 +407,6 @@ unsafe extern "C" {
     ) -> f32;
 }
 unsafe extern "C" {
-    pub fn strtold(
-        __nptr: *const ::core::ffi::c_char,
-        __endptr: *mut *mut ::core::ffi::c_char,
-    ) -> u128;
-}
-unsafe extern "C" {
     pub fn strtol(
         __nptr: *const ::core::ffi::c_char,
         __endptr: *mut *mut ::core::ffi::c_char,
@@ -1268,29 +1262,6 @@ unsafe extern "C" {
     ) -> *mut ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn qecvt(
-        __value: u128,
-        __ndigit: ::core::ffi::c_int,
-        __decpt: *mut ::core::ffi::c_int,
-        __sign: *mut ::core::ffi::c_int,
-    ) -> *mut ::core::ffi::c_char;
-}
-unsafe extern "C" {
-    pub fn qfcvt(
-        __value: u128,
-        __ndigit: ::core::ffi::c_int,
-        __decpt: *mut ::core::ffi::c_int,
-        __sign: *mut ::core::ffi::c_int,
-    ) -> *mut ::core::ffi::c_char;
-}
-unsafe extern "C" {
-    pub fn qgcvt(
-        __value: u128,
-        __ndigit: ::core::ffi::c_int,
-        __buf: *mut ::core::ffi::c_char,
-    ) -> *mut ::core::ffi::c_char;
-}
-unsafe extern "C" {
     pub fn ecvt_r(
         __value: f64,
         __ndigit: ::core::ffi::c_int,
@@ -1303,26 +1274,6 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn fcvt_r(
         __value: f64,
-        __ndigit: ::core::ffi::c_int,
-        __decpt: *mut ::core::ffi::c_int,
-        __sign: *mut ::core::ffi::c_int,
-        __buf: *mut ::core::ffi::c_char,
-        __len: usize,
-    ) -> ::core::ffi::c_int;
-}
-unsafe extern "C" {
-    pub fn qecvt_r(
-        __value: u128,
-        __ndigit: ::core::ffi::c_int,
-        __decpt: *mut ::core::ffi::c_int,
-        __sign: *mut ::core::ffi::c_int,
-        __buf: *mut ::core::ffi::c_char,
-        __len: usize,
-    ) -> ::core::ffi::c_int;
-}
-unsafe extern "C" {
-    pub fn qfcvt_r(
-        __value: u128,
         __ndigit: ::core::ffi::c_int,
         __decpt: *mut ::core::ffi::c_int,
         __sign: *mut ::core::ffi::c_int,
