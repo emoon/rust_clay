@@ -573,6 +573,359 @@ impl From<Clay_StringSlice> for &str {
     }
 }
 
+/// Macro for creating `Declaration` instances with a cleaner, nested syntax.
+/// 
+/// This macro eliminates the need for manual `.end()` calls on builders and provides
+/// a more readable way to configure layout elements.
+/// 
+/// # Examples
+/// 
+/// ```rust
+/// use clay_layout::{declare, fixed, grow};
+/// 
+/// // Simple rectangle with corner radius
+/// let decl = declare! {
+///     id: clay.id("my_element"),
+///     layout: {
+///         width: fixed!(100.),
+///         height: fixed!(50.),
+///         padding: Padding::all(10),
+///     },
+///     corner_radius: {
+///         all: 5.0,
+///     },
+///     background_color: Color::rgb(255.0, 0.0, 0.0),
+/// };
+/// 
+/// // More complex layout with borders and floating
+/// let decl = declare! {
+///     layout: {
+///         width: grow!(),
+///         height: fixed!(200.),
+///         direction: TopToBottom,
+///         child_gap: 16,
+///     },
+///     border: {
+///         width: 2,
+///         color: Color::rgb(255.0, 255.0, 255.0),
+///     },
+///     floating: {
+///         z_index: 10,
+///         attach_to: FloatingAttachToElement::Parent,
+///     },
+/// };
+/// ```
+#[macro_export]
+macro_rules! declare {
+    {
+        $(id: $id:expr,)?
+        $(layout: {
+            $(width: $width:expr,)?
+            $(height: $height:expr,)?
+            $(padding: $padding:expr,)?
+            $(direction: $direction:expr,)?
+            $(child_gap: $gap:expr,)?
+            $(child_alignment: $align:expr,)?
+        },)?
+        $(corner_radius: {
+            $(all: $radius:expr,)?
+            $(top_left: $tl:expr,)?
+            $(top_right: $tr:expr,)?
+            $(bottom_left: $bl:expr,)?
+            $(bottom_right: $br:expr,)?
+        },)?
+        $(background_color: $bg:expr,)?
+        $(border: {
+            $(width: $border_width:expr,)?
+            $(left: $border_left:expr,)?
+            $(right: $border_right:expr,)?
+            $(top: $border_top:expr,)?
+            $(bottom: $border_bottom:expr,)?
+            $(between_children: $border_between:expr,)?
+            $(color: $border_color:expr,)?
+        },)?
+        $(floating: {
+            $(offset: $float_offset:expr,)?
+            $(dimensions: $float_dimensions:expr,)?
+            $(z_index: $float_z:expr,)?
+            $(parent_id: $float_parent:expr,)?
+            $(attach_points: ($float_element:expr, $float_parent_point:expr),)?
+            $(attach_to: $float_attach:expr,)?
+            $(pointer_capture_mode: $float_capture:expr,)?
+        },)?
+        $(image: {
+            $(data: $image_data:expr,)?
+        },)?
+        $(aspect_ratio: $aspect:expr,)?
+        $(clip: ($clip_h:expr, $clip_v:expr, $clip_offset:expr),)?
+        $(custom_element: $custom:expr,)?
+    } => {
+        {
+            let mut decl = $crate::Declaration::new();
+            
+            // Set ID if provided
+            $(decl.id($id);)?
+            
+            // Configure layout if provided
+            $(
+                {
+                    let mut layout = decl.layout();
+                    $(layout.width($width);)?
+                    $(layout.height($height);)?
+                    $(layout.padding($padding);)?
+                    $(layout.direction($direction);)?
+                    $(layout.child_gap($gap);)?
+                    $(layout.child_alignment($align);)?
+                    layout.end();
+                }
+            )?
+            
+            // Configure corner radius if provided
+            $(
+                {
+                    let mut corner = decl.corner_radius();
+                    $(corner.all($radius);)?
+                    $(corner.top_left($tl);)?
+                    $(corner.top_right($tr);)?
+                    $(corner.bottom_left($bl);)?
+                    $(corner.bottom_right($br);)?
+                    corner.end();
+                }
+            )?
+            
+            // Set background color if provided
+            $(decl.background_color($bg);)?
+            
+            // Configure border if provided
+            $(
+                {
+                    let mut border = decl.border();
+                    $(border.all_directions($border_width);)?
+                    $(border.left($border_left);)?
+                    $(border.right($border_right);)?
+                    $(border.top($border_top);)?
+                    $(border.bottom($border_bottom);)?
+                    $(border.between_children($border_between);)?
+                    $(border.color($border_color);)?
+                    border.end();
+                }
+            )?
+            
+            // Configure floating if provided
+            $(
+                {
+                    let mut floating = decl.floating();
+                    $(floating.offset($float_offset);)?
+                    $(floating.dimensions($float_dimensions);)?
+                    $(floating.z_index($float_z);)?
+                    $(floating.parent_id($float_parent);)?
+                    $(floating.attach_points($float_element, $float_parent_point);)?
+                    $(floating.attach_to($float_attach);)?
+                    $(floating.pointer_capture_mode($float_capture);)?
+                    floating.end();
+                }
+            )?
+            
+            // Configure image if provided
+            $(
+                {
+                    let mut image = decl.image();
+                    $(image.data($image_data);)?
+                    image.end();
+                }
+            )?
+            
+            // Set aspect ratio if provided
+            $(decl.aspect_ratio($aspect);)?
+            
+            // Set clip if provided
+            $(decl.clip($clip_h, $clip_v, $clip_offset);)?
+            
+            // Set custom element if provided
+            $(decl.custom_element($custom);)?
+            
+            decl
+        }
+    };
+}
+
+/// Ergonomic macro for creating UI elements with automatic ID handling and simplified syntax.
+/// 
+/// This macro combines element declaration and the `.with()` call into a single, clean syntax.
+/// It automatically handles string-to-ID conversion and eliminates the need for repetitive 
+/// `clay.id()` calls and manual `.with()` invocations.
+/// 
+/// # Examples
+/// 
+/// ```rust
+/// use clay_layout::{clay, fixed};
+/// 
+/// // Simple red rectangle
+/// clay!(clay, {
+///     id: "red_rectangle",
+///     layout: {
+///         width: fixed!(50.),
+///         height: fixed!(50.),
+///     },
+///     corner_radius: {
+///         all: 5.,
+///     },
+///     background_color: (0xFF, 0x00, 0x00).into(),
+/// }, |_| {});
+/// 
+/// // Container with children
+/// clay!(clay, {
+///     id: "container",
+///     layout: {
+///         width: grow!(),
+///         height: fixed!(200.),
+///         direction: TopToBottom,
+///         child_gap: 16,
+///     },
+///     background_color: Color::rgb(50.0, 50.0, 50.0),
+/// }, |clay| {
+///     clay!(clay, {
+///         id: "child_element",
+///         layout: { width: fixed!(100.), height: fixed!(50.) },
+///         background_color: Color::rgb(100.0, 100.0, 100.0),
+///     }, |_| {});
+/// });
+/// ```
+#[macro_export]
+macro_rules! clay {
+    ($clay_instance:expr, {
+        $(id: $id:expr,)?
+        $(layout: {
+            $(width: $width:expr,)?
+            $(height: $height:expr,)?
+            $(padding: $padding:expr,)?
+            $(direction: $direction:expr,)?
+            $(child_gap: $gap:expr,)?
+            $(child_alignment: $align:expr,)?
+        },)?
+        $(corner_radius: {
+            $(all: $radius:expr,)?
+            $(top_left: $tl:expr,)?
+            $(top_right: $tr:expr,)?
+            $(bottom_left: $bl:expr,)?
+            $(bottom_right: $br:expr,)?
+        },)?
+        $(background_color: $bg:expr,)?
+        $(border: {
+            $(width: $border_width:expr,)?
+            $(left: $border_left:expr,)?
+            $(right: $border_right:expr,)?
+            $(top: $border_top:expr,)?
+            $(bottom: $border_bottom:expr,)?
+            $(between_children: $border_between:expr,)?
+            $(color: $border_color:expr,)?
+        },)?
+        $(floating: {
+            $(offset: $float_offset:expr,)?
+            $(dimensions: $float_dimensions:expr,)?
+            $(z_index: $float_z:expr,)?
+            $(parent_id: $float_parent:expr,)?
+            $(attach_points: ($float_element:expr, $float_parent_point:expr),)?
+            $(attach_to: $float_attach:expr,)?
+            $(pointer_capture_mode: $float_capture:expr,)?
+        },)?
+        $(image: {
+            $(data: $image_data:expr,)?
+        },)?
+        $(aspect_ratio: $aspect:expr,)?
+        $(clip: ($clip_h:expr, $clip_v:expr, $clip_offset:expr),)?
+        $(custom_element: $custom:expr,)?
+    }, $body:expr) => {
+        {
+            let mut decl = $crate::Declaration::new();
+            
+            // Set ID if provided (automatically convert string to ID)
+            $(decl.id($clay_instance.id($id));)?
+            
+            // Configure layout if provided
+            $(
+                {
+                    let mut layout = decl.layout();
+                    $(layout.width($width);)?
+                    $(layout.height($height);)?
+                    $(layout.padding($padding);)?
+                    $(layout.direction($direction);)?
+                    $(layout.child_gap($gap);)?
+                    $(layout.child_alignment($align);)?
+                    layout.end();
+                }
+            )?
+            
+            // Configure corner radius if provided
+            $(
+                {
+                    let mut corner = decl.corner_radius();
+                    $(corner.all($radius);)?
+                    $(corner.top_left($tl);)?
+                    $(corner.top_right($tr);)?
+                    $(corner.bottom_left($bl);)?
+                    $(corner.bottom_right($br);)?
+                    corner.end();
+                }
+            )?
+            
+            // Set background color if provided
+            $(decl.background_color($bg);)?
+            
+            // Configure border if provided
+            $(
+                {
+                    let mut border = decl.border();
+                    $(border.all_directions($border_width);)?
+                    $(border.left($border_left);)?
+                    $(border.right($border_right);)?
+                    $(border.top($border_top);)?
+                    $(border.bottom($border_bottom);)?
+                    $(border.between_children($border_between);)?
+                    $(border.color($border_color);)?
+                    border.end();
+                }
+            )?
+            
+            // Configure floating if provided
+            $(
+                {
+                    let mut floating = decl.floating();
+                    $(floating.offset($float_offset);)?
+                    $(floating.dimensions($float_dimensions);)?
+                    $(floating.z_index($float_z);)?
+                    $(floating.parent_id($float_parent);)?
+                    $(floating.attach_points($float_element, $float_parent_point);)?
+                    $(floating.attach_to($float_attach);)?
+                    $(floating.pointer_capture_mode($float_capture);)?
+                    floating.end();
+                }
+            )?
+            
+            // Configure image if provided
+            $(
+                {
+                    let mut image = decl.image();
+                    $(image.data($image_data);)?
+                    image.end();
+                }
+            )?
+            
+            // Set aspect ratio if provided
+            $(decl.aspect_ratio($aspect);)?
+            
+            // Set clip if provided
+            $(decl.clip($clip_h, $clip_v, $clip_offset);)?
+            
+            // Set custom element if provided
+            $(decl.custom_element($custom);)?
+            
+            // Execute the with call
+            $clay_instance.with(&decl, $body)
+        }
+    };
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

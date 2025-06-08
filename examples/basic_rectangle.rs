@@ -1,4 +1,4 @@
-use clay_layout::{fixed, Clay, Declaration};
+use clay_layout::{fixed, Clay, Declaration, declare, clay};
 
 #[rustfmt::skip]
 fn main() {
@@ -8,7 +8,7 @@ fn main() {
     // Begin the layout
     let mut clay = clay.begin::<(), ()>();
 
-    // Adds a red rectangle with a corner radius of 5.
+    // Adds a red rectangle with a corner radius of 5 (using the old builder style).
     // The Layout makes the rectangle have a width and height of 50.
     clay.with(&Declaration::new()
         .id(clay.id("red_rectangle"))
@@ -21,6 +21,45 @@ fn main() {
             .end()
         .background_color((0xFF, 0x00, 0x00).into()), |_| {},
     );
+
+    // Same rectangle using the new declare! macro
+    clay.with(&declare! {
+        id: clay.id("red_rectangle_macro"),
+        layout: {
+            width: fixed!(50.),
+            height: fixed!(50.),
+        },
+        corner_radius: {
+            all: 5.,
+        },
+        background_color: (0xFF, 0x00, 0x00).into(),
+    }, |_| {});
+
+    // Same rectangle using the clay! macro (most ergonomic)
+    clay!(clay, {
+        id: "red_rectangle_clay_macro",
+        layout: {
+            width: fixed!(50.),
+            height: fixed!(50.),
+        },
+        corner_radius: {
+            all: 5.,
+        },
+        background_color: (255.0, 0.0, 0.0).into(),
+    }, |_| {});
+
+    // Green rectangle with RGBA (using f32 values)
+    clay!(clay, {
+        id: "green_rectangle_rgba",
+        layout: {
+            width: fixed!(50.),
+            height: fixed!(50.),
+        },
+        corner_radius: {
+            all: 5.,
+        },
+        background_color: (0.0, 255.0, 0.0, 128.0).into(),
+    }, |_| {});
 
     // Return the list of render commands of your layout
     let render_commands = clay.end();
