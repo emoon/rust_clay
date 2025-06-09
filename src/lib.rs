@@ -749,9 +749,7 @@ macro_rules! declare {
     };
 }
 
-/// Ergonomic macro for creating UI elements with automatic ID handling and simplified syntax.
-/// 
-/// This macro combines element declaration and the `.with()` call into a single, clean syntax.
+/// This macro combines element declaration and the `.with()` call into a single syntax.
 /// It automatically handles string-to-ID conversion and eliminates the need for repetitive 
 /// `clay.id()` calls and manual `.with()` invocations.
 /// 
